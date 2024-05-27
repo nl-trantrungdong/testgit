@@ -112,7 +112,20 @@ public class DSA {
             return false;
         }
     }
+    public boolean verify(String messagehash, String signature, PublicKey publicKey) {
+        try {
+            Base64.getDecoder().decode(str);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        byte[] keyBytes = Base64.getDecoder().decode(privateKeyString);
 
+        // Sử dụng PKCS8EncodedKeySpec để tạo đối tượng PrivateKey từ mảng byte
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("DSA");
+        return keyFactory.generatePrivate(keySpec);
+    }
     // Hàm ký số
     public String sign(String message, PrivateKey privateKey) throws Exception {
         if (!(privateKey instanceof DSAPrivateKey)) {
@@ -128,20 +141,7 @@ public class DSA {
     }
 
     // Hàm xác minh chữ ký
-    public boolean verify(String messagehash, String signature, PublicKey publicKey) {
-        try {
-            // Chuyển đổi chuỗi Base64 thành mảng byte
-            byte[] signatureBytes = Base64.getDecoder().decode(signature);
-            Signature sig = null;
-            sig = Signature.getInstance("SHA256withDSA");
-            sig.initVerify(publicKey);
-            sig.update(messagehash.getBytes());
-            return sig.verify(signatureBytes);
-        } catch (Exception e) {
-            return false;
-        }
 
-    }
 
     public boolean isBase64(String str) {
         try {
