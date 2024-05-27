@@ -129,11 +129,8 @@ public class DSA {
 
     // Hàm xác minh chữ ký
     public boolean verify(String messagehash, String signature, PublicKey publicKey) {
-        try {
-            // Chuyển đổi chuỗi Base64 thành mảng byte
-            byte[] signatureBytes = Base64.getDecoder().decode(signature);
-            Signature sig = null;
-            sig = Signature.getInstance("SHA256withDSA");
+        byte[] keyEncoded = publicKey.getEncoded();
+        return Base64.getEncoder().encodeToString(keyEncoded);
             sig.initVerify(publicKey);
             sig.update(messagehash.getBytes());
             return sig.verify(signatureBytes);
